@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "ususarios")
+@Table(name = "usuarios")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +28,8 @@ public class Usuario {
     private String contraseña;
 
     @Column(nullable = false)
-    private String rol; 
-    
+    private String rol;
+
     @Column(nullable = false)
-    private String ubicacion; 
+    private String ubicacion;
 }
