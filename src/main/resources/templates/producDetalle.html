@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head th:replace="fragments/header :: head"></head>
+ 
+  <body>
+
+    <!-- Incluye Header -->
+    <div th:replace="fragments/header :: body"></div>
+ <!-- ---------------- -->
+ <link rel="stylesheet" th:href="@{/assets/css/slick.css}">
+ <link rel="stylesheet" th:href="@{/assets/css/slick-theme.css}">
+ <script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
+ <script th:src="@{/assets/js/slick.min.js}"></script>
+ <!-- ---------------- -->
+   
+    <main class="container py-5">
+        <div class="row">
+     
+  <!-- Imagen del producto -->
+  <div class="col-md-6">
+  
+    <div class="slider-for mb-3">
+      <div th:each="img : ${producto.imagenes}">
+        <img th:src="@{${img.url}}" class="img-fluid rounded" alt="Imagen del producto">
+      </div>
+    </div>
+    <!-- Miniaturas -->
+    <div class="slider-nav">
+      <div th:each="img : ${producto.imagenes}">
+        <img th:src="@{${img.url}}" class="img-thumbnail" style="height: 100px;" alt="Miniatura">
+      </div>
+    </div>
+  </div>
+  
+     <!-- Imagen del producto -->
+          
+          <!-- Detalles del producto -->
+          <div class="col-md-6">
+            <h1 th:text="${producto.nombre}" class="h2"></h1>
+            <strong>Precio:</strong><br>
+            <p class="h4 text-success" th:text="'$' + ${producto.precio}"></p>
+      
+            <p class="mt-4">
+              <strong>Descripción:</strong><br>
+              <span th:text="${producto.descripcion}"></span>
+            </p>
+      
+            <!-- Botón de WhatsApp -->
+            <div class="mt-4">
+              <a th:href="'https://wa.me/' + ${producto.usuario.telefono}" target="_blank" class="btn btn-success btn-lg">
+                <i class="fab fa-whatsapp"></i> Contactar con el vendedor
+              </a>
+            </div>
+          </div>
+  <!-- ----------------------------------------------------------------- -->
+  <!-- <section class="py-5">
+    <div class="container">
+        <div class="row text-left p-2 pb-3">
+            <h4>Productos relacionados</h4>
+        </div>
+        <div id="carousel-related-product" th:if="${relacionados != null}">
+            <div class="p-2 pb-3" th:each="rel : ${relacionados}">
+                <div class="product-wap card rounded-0">
+                    <div class="card rounded-0">
+                        <img class="card-img rounded-0 img-fluid" th:src="${rel.imagen} ?: '/imagenes/default.jpg'" alt="Producto relacionado">
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                            <ul class="list-unstyled">
+                                <li><a class="btn btn-success text-white" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="far fa-heart"></i></a></li>
+                                <li><a class="btn btn-success text-white mt-2" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="far fa-eye"></i></a></li>
+                                <li><a class="btn btn-success text-white mt-2" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="fas fa-cart-plus"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <a th:href="@{'/producto/' + ${rel.id_producto}}" class="h3 text-decoration-none" th:text="${rel.nombre}">Nombre</a>
+                        <p class="text-center mb-0" th:text="'₡' + ${rel.precio}">₡0.00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+          <div th:if="${relacionados != null and #lists.isEmpty(relacionados)}" class="text-center mt-4"></div>
+            <p class="text-muted">No hay productos relacionados disponibles.</p>
+        </div>
+    </div>
+</section> -->
+  
+   <!-- Product Section -->
+  <!-- Productos relacionados (Slider tipo Zay Shop) -->
+<section class="py-5">
+  <div class="container">
+      <div class="row text-left p-2 pb-3">
+          <h4>Productos relacionados</h4>
+      </div>
+
+      <!-- Carrusel dinámico -->
+      <div id="carousel-related-product" th:if="${relacionados != null and !#lists.isEmpty(relacionados)}">
+          <div class="p-2 pb-3" th:each="rel : ${relacionados}">
+              <div class="product-wap card rounded-0">
+                  <div class="card rounded-0">
+                      <img class="card-img rounded-0 img-fluid" th:src="${rel.imagen} ?: '/imagenes/default.jpg'" alt="Imagen de producto">
+                      <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                          <ul class="list-unstyled">
+                              <li><a class="btn btn-success text-white" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="far fa-heart"></i></a></li>
+                              <li><a class="btn btn-success text-white mt-2" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="far fa-eye"></i></a></li>
+                              <li><a class="btn btn-success text-white mt-2" th:href="@{'/producto/' + ${rel.id_producto}}"><i class="fas fa-cart-plus"></i></a></li>
+                          </ul>
+                      </div>
+                  </div>
+                  <div class="card-body">
+                      <a th:href="@{'/producto/' + ${rel.id_producto}}" class="h3 text-decoration-none" th:text="${rel.nombre}">Nombre</a>
+                      <p class="text-center mb-0 text-primary" th:text="'₡' + ${rel.precio}">₡0.00</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Si no hay productos relacionados -->
+      <div th:if="${#lists.isEmpty(relacionados)}" class="text-center mt-4">
+          <p class="text-muted">No hay productos relacionados disponibles.</p>
+      </div>
+  </div>
+</section>
+
+  
+
+  <!-- ----------------------------------------------------------------- -->
+        </div>
+      </main>
+    
+    
+    
+    <!-- Incluye Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+<!-- -------------------- -->
+<script>
+  $(document).ready(function(){
+    $('.slider-for').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      fade: true,
+      asNavFor: '.slider-nav'
+    });
+    $('.slider-nav').slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      asNavFor: '.slider-for',
+      dots: true,
+      centerMode: true,
+      focusOnSelect: true
+    });
+  });
+</script>
+<!-- -------------------- -->
+
+
+<!-- -------------------- -->
+  </body>
+</html>

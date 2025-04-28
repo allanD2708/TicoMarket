@@ -1,6 +1,12 @@
 package com.example.ticomarket.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +21,7 @@ public class Producto {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_producto;
+    private Integer id_producto;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -35,5 +41,11 @@ public class Producto {
     
     @ManyToOne
     @JoinColumn(name =  "id_usuario")
+    @JsonBackReference
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Imagen> imagenes = new ArrayList<>();
+
 }

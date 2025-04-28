@@ -1,0 +1,106 @@
+
+/* Variables de color */
+:root {
+    --color-1: #02D9ED;
+    --color-2: #028FED;
+    --color-3: #4D7BEF;
+}
+
+/* Estilo para texto con color primario */
+.text-primary {
+    color: var(--color-2) !important;
+}
+
+/* Estilo para el botón primario */
+.btn-primary {
+    background-color: var(--color-3);
+    border-color: var(--color-3);
+}
+
+/* Estilo para el hover del botón primario */
+.btn-primary:hover {
+    background-color: var(--color-2);
+    border-color: var(--color-2);
+}
+
+/* Estilo para la imagen superior de las tarjetas */
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+
+
+ /* Cambiar el color de hover a azul para los enlaces del menú */
+ .navbar-nav .nav-item .nav-link:hover {
+    color: #028FED !important; /* Color azul */
+    transition: color 0.3s ease;
+}
+
+/* Asegurarse de que los elementos li estén más separados */
+.navbar-nav .nav-item {
+    margin-right: 20px; /* Espaciado entre los elementos */
+}
+
+
+
+
+/* Ajuste para las imágenes del carrusel */
+#template-mo-zay-hero-carousel .carousel-inner .carousel-item img {
+    width: 50%;        /* La imagen ocupa todo el ancho del contenedor */
+    height: 50%;       /* Ajusta la altura al 100% del contenedor */
+    object-fit: cover;  /* Asegura que la imagen cubra el espacio sin deformarse */
+}
+
+/* Estilo responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+    #template-mo-zay-hero-carousel .carousel-inner .carousel-item img {
+        height: 250px;  /* Reducir la altura en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    #template-mo-zay-hero-carousel .carousel-inner .carousel-item img {
+        height: 200px;  /* Ajuste aún más pequeño para móviles */
+    }
+}
+
+
+
+/* Color del botón activo en la paginación */
+.pagination .page-item .page-link.active {
+    background-color: var(--color-1);
+    border-color: var(--color-1);
+    color: white;
+}
+
+/* Hover para todos los botones de la paginación */
+.pagination .page-item .page-link:hover {
+    background-color: var(--color-1);
+    border-color: var(--color-1);
+    color: white;
+}
+
+/* Botón en overlay del producto */
+.custom-overlay-btn {
+    background-color: var(--color-2);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.custom-overlay-btn:hover {
+    background-color: var(--color-1);
+}
+
+
+/* ------------------------------- */
+.position-relative {
+    position: relative;
+  }
+  
+  .btn.position-absolute {
+    z-index: 10;
+    padding: 2px 6px;
+    line-height: 1;
+  }
+  

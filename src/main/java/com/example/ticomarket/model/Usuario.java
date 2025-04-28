@@ -1,5 +1,9 @@
 package com.example.ticomarket.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +18,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_usuario;
+    private Integer id_usuario;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -33,5 +37,10 @@ public class Usuario {
     
     @Column(name = "rol", nullable = false)
     private String rol;
+
+    @OneToMany(mappedBy = "usuario")
+    @JsonManagedReference
+    private List<Producto> productos;
+
     
 }

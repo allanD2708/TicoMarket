@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="fragments/header :: head"></head>
+<body>
+
+  <!-- Header -->
+  <div th:replace="fragments/header :: body"></div>
+
+  <!-- Contenido principal -->
+  <main>
+   
+   <!-- Carrusel -->
+<div id="marketico-carousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+  
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+            <div class="container">
+                <div class="row p-5 align-items-center">
+                    <div class="col-lg-6 text-start">
+                        <h1 class="h1 text-info"><b>Marketico</b> Online</h1>
+                        <h3 class="h2">Productos destacados cada semana</h3>
+                        <p>Explora lo mejor que nuestros vendedores tienen para ofrecer en un solo lugar.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid rounded" src="/assets/img/cr7.jpeg" alt="Banner 1">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+           <!-- Slide 4 -->
+           <div class="carousel-item">
+            <div class="container">
+                <div class="row p-5 align-items-center">
+                    <div class="col-lg-6 text-start">
+                        <h1 class="h1">Ofertas únicas</h1>
+                        <h3 class="h2">Descuentos semanales</h3>
+                        <p>No te pierdas nuestras promociones por tiempo limitado en productos seleccionados.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid rounded" src="/assets/img/ace.jpg" alt="Banner 3">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row p-5 align-items-center">
+                    <div class="col-lg-6 text-start">
+                        <h1 class="h1">Calidad Garantizada</h1>
+                        <h3 class="h2">Solo vendedores verificados</h3>
+                        <p>Compra con confianza: productos revisados y de alta calidad.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid rounded" src="/assets/img/feature_prod_03.jpg" alt="Banner 2">
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row p-5 align-items-center">
+                    <div class="col-lg-6 text-start">
+                        <h1 class="h1">Ofertas únicas</h1>
+                        <h3 class="h2">Descuentos semanales</h3>
+                        <p>No te pierdas nuestras promociones por tiempo limitado en productos seleccionados.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <img class="img-fluid rounded" src="/assets/img/banner_img_03.jpg" alt="Banner 3">
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+         <!-- Slide 4 -->
+         <div class="carousel-item">
+          <div class="container">
+              <div class="row p-5 align-items-center">
+                  <div class="col-lg-6 text-start">
+                      <h1 class="h1">Ofertas únicas</h1>
+                      <h3 class="h2">Descuentos semanales</h3>
+                      <p>No te pierdas nuestras promociones por tiempo limitado en productos seleccionados.</p>
+                  </div>
+                  <div class="col-lg-6">
+                      <img class="img-fluid rounded" src="/assets/img/category_img_02.jpg" alt="Banner 3">
+                    
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+
+       <!-- Flechas -->
+  <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#marketico-carousel" role="button" data-bs-slide="prev">
+    <i class="fas fa-chevron-left fa-2x text-info"></i>
+  </a>
+  <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#marketico-carousel" role="button" data-bs-slide="next">
+    <i class="fas fa-chevron-right fa-2x text-info"></i>
+  </a>
+    </div>
+  
+
+  
+  <!-- Product Section -->
+  <section class="container py-5">
+      <div class="row text-center pb-3">
+          <div class="col-lg-6 m-auto">
+              <h1 class="h1 text-primary">Productos</h1>
+              <p>Explora los productos publicados por nuestros vendedores.</p>
+          </div>
+      </div>
+  
+      <div class="row" th:if="${productos != null}">
+          <div class="col-md-4 mb-4" th:each="producto : ${productos}">
+              <div class="card h-100 shadow">
+                  <a href="#"><img th:src="${producto.imagen} ?: '/imagenes/default.jpg'" class="card-img-top" alt="Producto"></a>
+                  <div class="card-body">
+                      <h5 class="card-title" th:text="${producto.nombre}">Nombre</h5>
+                      <p class="card-text fw-bold text-primary">₡ <span th:text="${producto.precio}">0.00</span></p>
+                  </div>
+                  <div class="card-footer text-center">
+                      <!-- <a th:href="@{'/producDetalle/' + ${producto.id_producto}}" class="btn btn-primary btn-sm">Ver más</a> -->
+                      <a href="/shop" class="btn btn-primary btn-sm">Ver más</a>
+                      
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <div th:if="${productos.size() == 0}" class="text-center mt-4">
+          <p class="text-muted">No hay productos disponibles por el momento.</p>
+      </div>
+  </section>
+  </main>
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

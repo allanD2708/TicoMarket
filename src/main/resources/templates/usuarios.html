@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- HEAD -->
+<head th:replace="fragments/header :: head"></head>
+<body>
+
+<!-- NAVBAR + TOPBAR -->
+<div th:replace="fragments/header :: body"></div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- <h2 class="text-primary fw-bold">Administración de Usuarios</h2> -->
+        <h1 class="h2 text-primary">
+          <i class="fas fa-users me-2"></i> Gestión de Usuarios
+        </h1>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
+            <i class="fas fa-user-plus me-2"></i>Agregar Usuario
+        </button>
+    </div>
+    <!-- ---------------------------------------------------------------------------- -->
+
+    
+    <!-- <div class="table-responsive shadow rounded-3 bg-white">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Rol</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.id_usuario}">1</td>
+                    <td th:text="${usuario.nombre}">Nombre Usuario</td>
+                    <td th:text="${usuario.email}">correo@ejemplo.com</td>
+                    <td th:text="${usuario.telefono}">123456789</td>
+                    <td th:text="${usuario.rol}">Rol</td>
+                    <td th:text="${usuario.direccion}">Dirección</td>
+                      
+                    <td>
+                      <button type="button" class="btn btn-sm btn-outline-warning me-1 btn-editar"
+                      data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal"
+                      th:attr="data-id=${usuario.id_usuario}, 
+                               data-nombre=${usuario.nombre}, 
+                               data-email=${usuario.email}, 
+                               data-telefono=${usuario.telefono}, 
+                               data-password=${usuario.password}, 
+                               data-rol=${usuario.rol}, 
+                               data-direccion=${usuario.direccion}">
+                      <i class="fas fa-edit"></i>
+                  </button>
+                  
+                      <a class="btn btn-sm btn-outline-danger"
+                         th:href="@{/usuarios/eliminar/{id}(id=${usuario.id_usuario})}">
+                          <i class="fas fa-trash-alt"></i>
+                      </a>
+                  </td>
+                  
+
+                </tr>
+            </tbody>
+        </table>
+    </div> -->
+
+<!-- --------------------------------------------------------------------------------------------- -->
+<div class="card shadow-sm">
+  <div class="card-header bg-dark text-white">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Lista de Usuarios</h5>
+      <div class="input-group w-25">
+        <input type="text" class="form-control form-control-sm" placeholder="Buscar..." id="searchInputUsuarios">
+        <button class="btn btn-outline-light btn-sm" type="button">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive shadow rounded-3 bg-white">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-primary">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.id_usuario}">1</td>
+            <td th:text="${usuario.nombre}">Nombre Usuario</td>
+            <td th:text="${usuario.email}">correo@ejemplo.com</td>
+            <td th:text="${usuario.telefono}">123456789</td>
+            <td th:text="${usuario.rol}">Rol</td>
+            <td th:text="${usuario.direccion}">Dirección</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-warning me-1 btn-editar"
+                data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal"
+                th:attr="data-id=${usuario.id_usuario}, 
+                         data-nombre=${usuario.nombre}, 
+                         data-email=${usuario.email}, 
+                         data-telefono=${usuario.telefono}, 
+                         data-password=${usuario.password}, 
+                         data-rol=${usuario.rol}, 
+                         data-direccion=${usuario.direccion}">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <a class="btn btn-sm btn-outline-danger"
+                th:href="@{/usuarios/eliminar/{id}(id=${usuario.id_usuario})}">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-footer bg-light">
+    <small class="text-muted" th:text="'Total usuarios: ' + ${usuarios.size()}"></small>
+  </div>
+</div>
+
+
+<!-- --------------------------------------------------------------------------------------------- -->
+    <!-- <div class="mt-4">
+        <a class="btn btn-outline-secondary" th:href="@{/}"><i class="fas fa-arrow-left me-2"></i>Volver a Inicio</a>
+    </div> -->
+
+</div>
+
+<!-- MODAL NUEVO USUARIO -->
+<div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" id="nombre" class="form-control" th:field="*{nombre}" placeholder="Ingrese el nombre">
+                        <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger"></div>
+                    </div>
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo:</label>
+                        <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="correo@ejemplo.com">
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+                    </div>
+                    <!-- Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <input type="text" id="telefono" class="form-control" th:field="*{telefono}" placeholder="Ingrese el teléfono">
+                        <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="text-danger"></div>
+                    </div>
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Ingrese la contraseña">
+                        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+                    </div>
+                    <!-- Rol -->
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol:</label>
+                        <select id="rol" class="form-select" th:field="*{rol}">
+                            <option value="AD">Administrador</option>
+                            <option value="VE">Vendedor</option>
+                        </select>
+                    </div>
+                    <!-- Dirección -->
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" id="direccion" class="form-control" th:field="*{direccion}" placeholder="Ingrese la dirección">
+                        <div th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="text-danger"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="fragments/footer :: footer"></div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const botonesEditar = document.querySelectorAll(".btn-editar");
+  
+      botonesEditar.forEach(boton => {
+          boton.addEventListener("click", () => {
+              // Llenar el formulario con los datos del botón
+              document.getElementById("nombre").value = boton.dataset.nombre;
+              document.getElementById("email").value = boton.dataset.email;
+              document.getElementById("telefono").value = boton.dataset.telefono;
+              document.getElementById("password").value = boton.dataset.password;
+              document.getElementById("rol").value = boton.dataset.rol;
+              document.getElementById("direccion").value = boton.dataset.direccion;
+  
+              // Crear un input hidden para el ID si no existe
+              let idInput = document.getElementById("id_usuario");
+              if (!idInput) {
+                  idInput = document.createElement("input");
+                  idInput.type = "hidden";
+                  idInput.name = "id_usuario";
+                  idInput.id = "id_usuario";
+                  document.querySelector("#nuevoUsuarioModal form").appendChild(idInput);
+              }
+              idInput.value = boton.dataset.id;
+  
+              // Cambiar el título del modal
+              document.getElementById("nuevoUsuarioModalLabel").textContent = "Editar Usuario";
+          });
+      });
+  
+      // Reiniciar el modal al cerrarlo
+      const modal = document.getElementById('nuevoUsuarioModal');
+      modal.addEventListener('hidden.bs.modal', function () {
+          document.querySelector("#nuevoUsuarioModal form").reset();
+          document.getElementById("nuevoUsuarioModalLabel").textContent = "Nuevo Usuario";
+          const idInput = document.getElementById("id_usuario");
+          if (idInput) idInput.remove();
+      });
+  });
+  </script>
+  <!-- ------------------------------------------------------------------- -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.getElementById('searchInputUsuarios');
+      const filas = document.querySelectorAll('tbody tr');
+  
+      input.addEventListener('input', function () {
+        const filtro = this.value.toLowerCase();
+  
+        filas.forEach(fila => {
+          const texto = fila.textContent.toLowerCase();
+          fila.style.display = texto.includes(filtro) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+  
+  <!-- ------------------------------------------------------------------- -->
+  
+</body>
+</html>

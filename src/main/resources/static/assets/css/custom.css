@@ -1,0 +1,10 @@
+/*
+Custom Css
+*/
+#carousel-relacionados .card {
+    transition: transform 0.3s;
+  }
+  #carousel-relacionados .card:hover {
+    transform: scale(1.02);
+  }
+  

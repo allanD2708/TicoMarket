@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head th:replace="fragments/header :: head"></head>
+  <body>
+
+    <!-- Incluye Header -->
+    <div th:replace="fragments/header :: body"></div>
+
+   
+    <main>
+      <div class="container py-5">
+        <div class="row">
+    
+          <!-- Sidebar de categorías -->
+          <div class="col-lg-3">
+            <h1 class="h2 pb-4">Categorías</h1>
+            <ul class="list-unstyled templatemo-accordion">
+              <li class="pb-3">
+                <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
+                  Todos
+                  <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                </a>
+                <ul class="collapse show list-unstyled pl-3">
+                  <li><a class="text-decoration-none" th:href="@{/productos/categoria/Moda}">Moda</a></li>
+                  <li><a class="text-decoration-none" th:href="@{/productos/categoria/Deporte}">Deporte</a></li>
+                </ul>
+              </li>
+              <!-- Puedes agregar más filtros dinámicos aquí -->
+            </ul>
+          </div>
+    
+          <!-- Listado de productos -->
+          <div class="col-lg-9">
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="list-inline shop-top-menu pb-3 pt-1">
+                  <li class="list-inline-item"><a class="h3 text-dark text-decoration-none mr-3" href="#">Todos</a></li>
+                  <li class="list-inline-item"><a class="h3 text-dark text-decoration-none mr-3" th:href="@{/productos/categoria/Moda}">Moda</a></li>
+                  <li class="list-inline-item"><a class="h3 text-dark text-decoration-none" href="#">Deporte</a></li>
+                </ul>
+              </div>
+              <div class="col-md-6 pb-4">
+                <select class="form-control">
+                  <option>Destacados</option>
+                  <option>A a Z</option>
+                  <option>Precio</option>
+                </select>
+              </div>
+            </div>
+    
+            <div class="row">
+              <div class="col-md-4" th:each="producto : ${productos}">
+                <div class="card mb-4 product-wap rounded-0">
+                  <div class="card rounded-0">
+                    <img th:src="@{${producto.imagen}}" class="card-img rounded-0 img-fluid" alt="Imagen de producto">
+
+                    <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                      <ul class="list-unstyled">
+                        <!-- <li><a class="btn btn-success text-white" th:href="@{'/producto/' + ${producto.id_producto}}"><i class="far fa-heart"></i></a></li> -->
+                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" th:href="@{'/producto/' + ${producto.id_producto}}"><i class="far fa-eye"></i></a></li> -->
+                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" th:href="producDetalle"><i class="far fa-eye"></i></a></li> -->
+                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" href="producDetalle"><i class="far fa-eye"></i></a></li> -->
+                        <li>
+                          <a class="btn custom-overlay-btn text-white mt-2" 
+                             th:href="@{'/producDetalle/' + ${producto.id_producto}}">
+                            <i class="far fa-eye"></i>
+                          </a>
+                        </li>                        
+                      
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <a class="h3 text-decoration-none" th:href="@{'/producto/' + ${producto.id_producto}}" th:text="${producto.nombre}">Nombre del producto</a>
+                    <p class="text-center mb-0" th:text="'₡' + ${producto.precio}">₡25000</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <!-- Paginación -->
+            <div class="row">
+              <ul class="pagination pagination-lg justify-content-end">
+                <li class="page-item disabled">
+                  <a class="page-link active rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#" tabindex="-1">1</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0" href="#">2</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link rounded-0 shadow-sm border-top-0 border-left-0" href="#">3</a>
+                </li>
+              </ul>
+            </div>
+            
+   
+      
+          </div>
+        </div>
+      </div>
+<!-- Sección Marcas -->
+<section class="py-5" style="background-color: var(--color-2);">
+  <div class="container my-4">
+    <div class="row text-center py-3">
+      <div class="col-lg-6 m-auto">
+        <h1 class="h1 text-white">Nuestras Marcas</h1>
+        <p class="text-white">
+          Trabajamos con las mejores marcas del mercado para brindarte productos de alta calidad y nuestros clientes.
+        </p>
+      </div>
+      <div class="col-lg-9 m-auto tempaltemo-carousel">
+        <div class="row d-flex flex-row align-items-center">
+          <!-- Flecha izquierda -->
+          <div class="col-1 text-white">
+            <a class="h1" href="#templatemo-slide-brand" role="button" data-bs-slide="prev">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </div>
+
+          <!-- Carrusel -->
+          <div class="col">
+            <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="templatemo-slide-brand" data-bs-ride="carousel">
+              <div class="carousel-inner product-links-wap" role="listbox">
+                <div class="carousel-item active">
+                  <div class="row">
+                    <div class="col-3 p-md-5">
+                      <img class="img-fluid brand-img" src="/assets/img/brand_01.png" alt="Brand 1">
+                    </div>
+                    <div class="col-3 p-md-5">
+                      <img class="img-fluid brand-img" src="/assets/img/onepiece.jpg" alt="Brand 4">
+                    </div>
+                    <div class="col-3 p-md-5">
+                      <img class="img-fluid brand-img" src="/assets/img/brand_02.png" alt="Brand 2">
+                    </div>
+                    <div class="col-3 p-md-5">
+                      <img class="img-fluid brand-img" src="/assets/img/brand_03.png" alt="Brand 3">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flecha derecha -->
+          <div class="col-1 text-white">
+            <a class="h1" href="#templatemo-slide-brand" role="button" data-bs-slide="next">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </main>
+    
+    
+      
+
+    <!-- Incluye Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+  </body>
+</html>

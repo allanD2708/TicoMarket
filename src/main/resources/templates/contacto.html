@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head th:replace="fragments/header :: head"></head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" ... >
+
+  <body>
+
+    <!-- Incluye Header -->
+    <div th:replace="fragments/header :: body"></div>
+
+    <main>
+       <!-- Encabezado de la página -->
+<!-- <div class="container-fluid py-5" style="background-color: var(--color-1);"> -->
+<div class="container-fluid py-5" style="background-color: var(--color-2);">
+    <div class="col-md-6 m-auto text-center">
+        <h1 class="h1 text-white">Contáctanos</h1>
+        <p class="text-white">
+            ¿Tienes preguntas o comentarios? ¡Estamos aquí para ayudarte!
+        </p>
+    </div>
+</div>
+
+<!-- Mapa de ubicación (Siquirres, Limón) -->
+<div id="mapid" style="width: 100%; height: 300px;"></div>
+
+<!-- Leaflet.js para el mapa -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+<script>
+    var mymap = L.map('mapid').setView([10.095, -83.506], 13); // Coordenadas de Siquirres, Limón
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mymap);
+
+    L.marker([10.095, -83.506]).addTo(mymap)
+        .bindPopup("<b>Estamos en Siquirres</b><br />Limón, Costa Rica.").openPopup();
+
+    mymap.scrollWheelZoom.disable();
+    mymap.touchZoom.disable();
+
+ 
+
+</script>
+
+<!-- Formulario de contacto -->
+<div class="container py-5">
+    <div class="row py-5">
+        <form class="col-md-9 m-auto" method="post" role="form">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputname" class="text-primary">Nombre</label>
+                    <input type="text" class="form-control mt-1" id="name" name="name" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputemail" class="text-primary">Correo electrónico</label>
+                    <input type="email" class="form-control mt-1" id="email" name="email" placeholder="Tu correo" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="inputsubject" class="text-primary">Asunto</label>
+                <input type="text" class="form-control mt-1" id="subject" name="subject" placeholder="Asunto" required>
+            </div>
+            <div class="mb-3">
+                <label for="inputmessage" class="text-primary">Mensaje</label>
+                <textarea class="form-control mt-1" id="message" name="message" placeholder="Escribe tu mensaje aquí..." rows="8" required></textarea>
+            </div>
+            <div class="row">
+                <div class="col text-end mt-2">
+                    <button type="submit" class="btn btn-primary btn-lg px-3">Enviar</button>
+                </div>
+            </div>
+            <div id="formAlert" class="alert alert-success mt-4 d-none" role="alert">
+                ¡Tu mensaje se ha enviado con éxito!
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+      </main>
+      
+      
+
+    <!-- Incluye Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const form = document.querySelector('form');
+          const alertBox = document.getElementById('formAlert');
+      
+          form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Evita que el formulario se envíe de verdad
+      
+            // Aquí podrías agregar lógica de envío real con fetch/AJAX
+      
+            // Mostrar el mensaje
+            alertBox.classList.remove('d-none');
+      
+            // Limpiar el formulario
+            form.reset();
+      
+            // Ocultar el mensaje después de unos segundos (opcional)
+            setTimeout(() => {
+              alertBox.classList.add('d-none');
+            }, 5000);
+          });
+        });
+      </script>
+      
+  </body>
+</html>

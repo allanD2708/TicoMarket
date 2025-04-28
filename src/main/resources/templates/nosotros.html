@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head th:replace="fragments/header :: head"></head>
+  <body>
+
+    <!-- Incluye Header -->
+    <div th:replace="fragments/header :: body"></div>
+
+    <main>
+
+        <!-- Sección About Us -->
+        <section style="background-color: var(--color-2);" class="py-5">
+          <div class="container">
+            <div class="row align-items-center py-5">
+              <div class="col-md-8 text-white">
+                <h1>Sobre Nosotros</h1>
+                <p>
+                  Somos una tienda comprometida con la calidad y la satisfacción de nuestros clientes esten plenamente seguros al comprar y vender sus productos. Nuestra misión es brindar los mejores productos con un servicio excepcional.
+                </p>
+              </div>
+              <div class="col-md-4">
+                <img src="/assets/img/TicoMarket logo.png" alt="Imagen Sobre Nosotros" class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Sección de Servicios -->
+        <section class="container py-5">
+          <div class="row text-center pt-5 pb-3">
+            <div class="col-lg-6 m-auto">
+              <h1 class="h1 text-primary">Nuestros Servicios</h1>
+              <p>Conoce las ventajas que ofrecemos para facilitar tu experiencia de compra.</p>
+            </div>
+          </div>
+          <div class="row">
+      
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-truck fa-lg"></i></div>
+                <h2 class="h5 mt-4">Entregas Rápidas</h2>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fas fa-exchange-alt"></i></div>
+                <h2 class="h5 mt-4">Devoluciones Fáciles</h2>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-percent"></i></div>
+                <h2 class="h5 mt-4">Promociones</h2>
+              </div>
+            </div>
+      
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-user"></i></div>
+                <h2 class="h5 mt-4">Atención 24/7</h2>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        <!-- Sección Marcas -->
+        <section class="py-5" style="background-color: var(--color-1);">
+          <div class="container my-4">
+            <div class="row text-center py-3">
+              <div class="col-lg-6 m-auto">
+                <h1 class="h1 text-white">Nuestras Marcas</h1>
+                <p class="text-white">Trabajamos con las mejores marcas del mercado para brindarte productos de alta calidad y nuestros clientes.</p>
+              </div>
+              <div class="col-lg-9 m-auto tempaltemo-carousel">
+                <div class="row d-flex flex-row align-items-center">
+                  <div class="col-1 text-white">
+                    <a class="h1" href="#templatemo-slide-brand" role="button" data-bs-slide="prev">
+                      <i class="fas fa-chevron-left"></i>
+                    </a>
+                  </div>
+      
+                  <div class="col">
+                    <div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="templatemo-slide-brand" data-bs-ride="carousel">
+                      <div class="carousel-inner product-links-wap" role="listbox">
+                        <div class="carousel-item active">
+                          <div class="row">
+                            <div class="col-3 p-md-5">
+                              <img class="img-fluid brand-img" src="/assets/img/brand_01.png" alt="Brand 1">
+                            </div>
+                            <div class="col-3 p-md-5">
+                                <img class="img-fluid brand-img" src="/assets/img/onepiece.jpg" alt="Brand 4">
+                              </div>
+                            <div class="col-3 p-md-5">
+                              <img class="img-fluid brand-img" src="/assets/img/brand_02.png" alt="Brand 2">
+                            </div>
+                            <div class="col-3 p-md-5">
+                              <img class="img-fluid brand-img" src="/assets/img/brand_03.png" alt="Brand 3">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div class="col-1 text-white">
+                    <a class="h1" href="#templatemo-slide-brand" role="button" data-bs-slide="next">
+                      <i class="fas fa-chevron-right"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+      </main>
+      
+      
+
+    <!-- Incluye Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+  </body>
+</html>
