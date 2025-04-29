@@ -16,6 +16,8 @@ import com.example.ticomarket.model.Producto;
 import com.example.ticomarket.model.Usuario;
 import com.example.ticomarket.service.ProductoService;
 import com.example.ticomarket.service.UsuarioService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
 import java.io.IOException;
 import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/productos")
@@ -54,16 +57,35 @@ public class ProductoController {
   
 
 
+// //--------------------------------------------------------------------------
+
 @PostMapping("/guardar")
 public String guardarProducto(@ModelAttribute Producto producto,
-                              @RequestParam("files") MultipartFile[] files) {
+                               @RequestParam("files") MultipartFile[] files,
+                               @RequestParam(value = "imagenesParaEliminar", required = false) String imagenesParaEliminarJson) {
 
-    List<Imagen> imagenes = new ArrayList<>();
-    String imagenPrincipal = null;
+    List<Imagen> nuevasImagenes = new ArrayList<>();
 
+    // Cargar el producto existente desde la BD si es edición
+    Producto productoExistente = productoService.buscarProductoPorId(producto.getId_producto()).orElse(null);
+
+    List<Imagen> imagenesExistentes = new ArrayList<>();
+    if (productoExistente != null) {
+        imagenesExistentes.addAll(productoExistente.getImagenes());
+    }
+
+    // Eliminar imágenes si corresponde
+    if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
+        List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
+        productoService.eliminarImagenes(idsImagenesEliminar);
+
+        // Filtrar las imágenes existentes, quitando las eliminadas
+        imagenesExistentes.removeIf(imagen -> idsImagenesEliminar.contains(imagen.getId_imagen()));
+    }
+
+    // Subir nuevas imágenes
     if (files != null && files.length > 0) {
-        for (int i = 0; i < files.length; i++) {
-            MultipartFile file = files[i];
+        for (MultipartFile file : files) {
             if (!file.isEmpty()) {
                 try {
                     String nombreArchivo = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -74,14 +96,10 @@ public String guardarProducto(@ModelAttribute Producto producto,
 
                     String url = "/imagenes/" + nombreArchivo;
 
-                    if (i == 0) {
-                        imagenPrincipal = url;
-                    }
-
                     Imagen imagen = new Imagen();
                     imagen.setUrl(url);
                     imagen.setProducto(producto);
-                    imagenes.add(imagen);
+                    nuevasImagenes.add(imagen);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,15 +108,67 @@ public String guardarProducto(@ModelAttribute Producto producto,
         }
     }
 
-    producto.setImagen(imagenPrincipal);
-    producto.setImagenes(imagenes);
-    producto.setImagenes(imagenes);
-    productoService.guardarProducto(producto); // Guarda todo en cascada
+    // Unir las imágenes existentes que quedaron + las nuevas subidas
+    List<Imagen> imagenesFinales = new ArrayList<>();
+    imagenesFinales.addAll(imagenesExistentes);
+    imagenesFinales.addAll(nuevasImagenes);
+
+    producto.setImagenes(imagenesFinales);
+
+    productoService.guardarProducto(producto);
 
     return "redirect:/productos";
 }
 
 
+// @PostMapping("/guardar")
+// public String guardarProducto(@ModelAttribute Producto producto,
+//                                @RequestParam("files") MultipartFile[] files,
+//                                @RequestParam(value = "imagenesParaEliminar", required = false) String imagenesParaEliminarJson) {
+
+//     List<Imagen> nuevasImagenes = new ArrayList<>();
+
+//     // Si hay imágenes a eliminar
+//     if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
+//         List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
+//         productoService.eliminarImagenes(idsImagenesEliminar);
+//     }
+
+//     // Subir nuevas imágenes
+//     if (files != null && files.length > 0) {
+//         for (MultipartFile file : files) {
+//             if (!file.isEmpty()) {
+//                 try {
+//                     String nombreArchivo = UUID.randomUUID() + "_" + file.getOriginalFilename();
+//                     Path rutaImagenes = Paths.get("src/main/resources/static/imagenes");
+//                     Files.createDirectories(rutaImagenes);
+//                     Path rutaCompleta = rutaImagenes.resolve(nombreArchivo);
+//                     Files.copy(file.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
+
+//                     String url = "/imagenes/" + nombreArchivo;
+
+//                     Imagen imagen = new Imagen();
+//                     imagen.setUrl(url);
+//                     imagen.setProducto(producto);
+//                     nuevasImagenes.add(imagen);
+
+//                 } catch (IOException e) {
+//                     e.printStackTrace();
+//                 }
+//             }
+//         }
+//     }
+
+//     // Si agregaron nuevas imágenes, las añadimos
+//     if (!nuevasImagenes.isEmpty()) {
+//         producto.getImagenes().addAll(nuevasImagenes);
+//     }
+
+//     productoService.guardarProducto(producto); // Guarda en cascada
+
+//     return "redirect:/productos";
+// }
+//-------------------------------------------------------------
 
 
 
@@ -107,18 +177,20 @@ public String guardarProducto(@ModelAttribute Producto producto,
     @GetMapping("/nuevo")
     public String mostrarFormularioCrear(Model model) {
         model.addAttribute("producto", new Producto());
-        // Se añade la lista de usuarios para relacionar el producto con un usuario (si es necesario)
         List<Usuario> usuarios = usuarioService.listarUsuarios();
         model.addAttribute("usuarios", usuarios);
-        return "productos";  // Ubicación de la vista "form.html"
+        return "productos";
     }
+
 
   
 
     // Muestra el formulario para editar un producto existente
     @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
-        Optional<Producto> productoOpt = productoService.buscarProductoPorId(id);
+    public String mostrarFormularioEditar(@PathVariable("id") Integer id, Model model) {
+        // Optional<Producto> productoOpt = productoService.buscarProductoPorId(id);
+        Optional<Producto> productoOpt = productoService.buscarProductoConUsuarioPorId(id);
+
         if (!productoOpt.isPresent()) {
             return "redirect:/productos";
         }
@@ -127,6 +199,9 @@ public String guardarProducto(@ModelAttribute Producto producto,
         model.addAttribute("usuarios", usuarios);
         return "productos";
     }
+
+
+
 
     // Elimina un producto
     @GetMapping("/eliminar/{id}")
@@ -138,7 +213,8 @@ public String guardarProducto(@ModelAttribute Producto producto,
  
    @GetMapping("/{id}")
 public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Integer id) {
-    Optional<Producto> productoOpt = productoService.buscarProductoPorId(id);
+    // Optional<Producto> productoOpt = productoService.buscarProductoPorId(id);
+    Optional<Producto> productoOpt = productoService.buscarProductoConUsuarioPorId(id);
     return productoOpt.map(ResponseEntity::ok)
                       .orElseGet(() -> ResponseEntity.notFound().build());
 }

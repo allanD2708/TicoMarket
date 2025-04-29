@@ -52,7 +52,8 @@
             <tbody>
               <tr th:each="producto : ${productos}">
                 <td>
-                  <img th:src="${producto.imagen} ?: '/assets/img/default-product.jpg'" 
+                  <!-- <img th:src="${producto.imagen} ?: '/assets/img/default-product.jpg'"  -->
+                  <img th:src="${#lists.isEmpty(producto.imagenes) ? '/assets/img/default-product.jpg' : producto.imagenes[0].url}"
                        alt="Imagen producto" 
                        class="img-thumbnail" 
                        style="width: 60px; height: 60px; object-fit: cover;">
@@ -190,7 +191,7 @@
               
                   <input type="file" class="form-control" id="imagenes" name="files" accept="image/*" multiple th:required="*{id_producto} == null">
                   <small class="text-muted">Seleccione una o más imágenes (JPEG, PNG)</small>
-                  <div id="previewContainer" th:if="${#fields.hasErrors('imagen')}" th:errors="*{imagen}" class="invalid-feedback d-block"></div>
+                  <div id="previewContainer" th:if="${#fields.hasErrors('imagenes')}" th:errors="*{imagenes}" class="invalid-feedback d-block"></div>
                   
                   <!-- Vista previa de imágenes -->
                   <div class="mt-2" id="previewContainer" style="display: none;">
@@ -201,7 +202,7 @@
                 
                 <div class="mb-3">
                   <label for="usuario" class="form-label">Asignar a usuario</label>
-                  <select class="form-select" id="usuario" th:field="*{usuario.id_usuario}" required>
+                  <select class="form-select" id="usuario"  th:field="*{usuario.id_usuario}" required>
                     <option value="" disabled selected>Seleccione un usuario...</option>
                     <option th:each="usuario : ${usuarios}"
                             th:value="${usuario.id_usuario}"
@@ -242,51 +243,76 @@
   <!-- Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Función para editar productos
-      const editarButtons = document.querySelectorAll('.btn-editar');
+      // Variables globales
+      let imagenesParaEliminar = [];
       const modal = new bootstrap.Modal(document.getElementById('modalProducto'));
       const form = document.querySelector('#modalProducto form');
       const modalTitle = document.querySelector('#modalProductoLabel span');
-
+      const imagenesActualesContainer = document.querySelector('.imagenes-actuales');
+      const inputImagenes = document.getElementById('imagenes');
+    
+      // Función para agregar imagen actual con botón eliminar
+      function agregarImagenActualConEliminar(imgUrl, idImagen) {
+        const div = document.createElement('div');
+        div.className = 'position-relative d-inline-block me-2 mb-2';
+    
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.className = 'img-thumbnail';
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.objectFit = 'cover';
+    
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+        deleteBtn.textContent = '×';
+        deleteBtn.style.zIndex = '10';
+    
+        deleteBtn.onclick = function () {
+          imagenesParaEliminar.push(idImagen); // Guardar id para eliminar después
+          div.remove(); // Quitar visualmente
+        };
+    
+        div.appendChild(img);
+        div.appendChild(deleteBtn);
+        imagenesActualesContainer.appendChild(div);
+      }
+    
+      // Función para cargar producto en modal
+      const editarButtons = document.querySelectorAll('.btn-editar');
       editarButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           const id = this.getAttribute('data-id');
-          
+    
           fetch(`/productos/${id}`)
             .then(res => res.json())
             .then(producto => {
-              // Actualizar título del modal
+              // Actualizar título y llenar campos
               modalTitle.textContent = 'Editar Producto';
-              
-              // Llenar los campos del formulario
               form.querySelector('[name="id_producto"]').value = producto.id_producto;
               form.querySelector('[name="nombre"]').value = producto.nombre;
               form.querySelector('[name="descripcion"]').value = producto.descripcion;
               form.querySelector('[name="precio"]').value = producto.precio;
               form.querySelector('[name="categoria"]').value = producto.categoria;
               form.querySelector('[name="usuario.id_usuario"]').value = producto.usuario?.id_usuario ?? "";
-              // -----------------------------------------------------------------------------------------
-              // Mostrar imágenes existentes
-    const imagenesActualesContainer = document.querySelector('.imagenes-actuales');
-    imagenesActualesContainer.innerHTML = ''; // Limpiar contenedor
-    
-    if (producto.imagenes && producto.imagenes.length > 0) {
-      producto.imagenes.forEach(img => {
-        const imgElement = document.createElement('img');
-        imgElement.src = img.url;
-        imgElement.className = 'img-thumbnail me-2';
-        imgElement.style.width = '100px';
-        imgElement.style.height = '100px';
-        imgElement.style.objectFit = 'cover';
-        imagenesActualesContainer.appendChild(imgElement);
-      });
-    }
-            // Función para mostrar imágenes con botón de eliminar
-               
 
-              // -----------------------------------------------------------------------------------------
-              // Mostrar el modal
+
+              // Quitar el required al editar
+              inputImagenes.required = false;
+    
+              // Limpiar imágenes anteriores
+              imagenesActualesContainer.innerHTML = '';
+              imagenesParaEliminar = [];
+    
+              // Cargar imágenes existentes
+              if (producto.imagenes && producto.imagenes.length > 0) {
+                producto.imagenes.forEach(img => {
+                  agregarImagenActualConEliminar(img.url, img.id_imagen);
+                });
+              }
+    
               modal.show();
             })
             .catch(err => {
@@ -295,121 +321,109 @@
             });
         });
       });
-
-      // Resetear modal cuando se cierra
+    
+      // Reset modal al cerrar
       document.getElementById('modalProducto').addEventListener('hidden.bs.modal', function() {
         form.reset();
         modalTitle.textContent = 'Agregar Producto';
         document.getElementById('previewContainer').style.display = 'none';
         document.getElementById('imagePreviews').innerHTML = '';
+        imagenesActualesContainer.innerHTML = '';
+        imagenesParaEliminar = [];
+    
+        // Volver a poner required al agregar nuevo producto
+        inputImagenes.required = true;
       });
-
-      // Vista previa de imágenes antes de subir
-      
-      //aca ---------------------------------------------------------
-     
-      //--------------------------------------------------------------
-      // Vista previa con botón de eliminar
-
-      document.getElementById('imagenes').addEventListener('change', function (event) {
-  const input = event.target;
-  const files = Array.from(input.files);
-  const previewContainer = document.getElementById('previewContainer');
-  const previews = document.getElementById('imagePreviews');
-  previews.innerHTML = '';
-  previewContainer.style.display = files.length > 0 ? 'block' : 'none';
-
-  const dt = new DataTransfer();
-
-  files.forEach(file => {
-    if (!file.type.match('image.*')) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      const previewDiv = document.createElement('div');
-      previewDiv.className = 'position-relative d-inline-block me-2 mb-2';
-
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.alt = 'Vista previa';
-      img.className = 'img-thumbnail';
-      img.style.width = '80px';
-      img.style.height = '80px';
-      img.style.objectFit = 'cover';
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.type = 'button';
-      deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
-      deleteBtn.textContent = '×';
-      deleteBtn.style.zIndex = '10';
-
-      deleteBtn.onclick = function () {
-        // Eliminar solo la imagen específica
-        const newFiles = Array.from(input.files).filter(f => f !== file);
-        const newDt = new DataTransfer();
-        newFiles.forEach(f => newDt.items.add(f));
-        input.files = newDt.files;
-
-        previewDiv.remove();
-        if (newDt.files.length === 0) {
-          previewContainer.style.display = 'none';
+    
+      // Vista previa de imágenes nuevas con botón eliminar
+      inputImagenes.addEventListener('change', function (event) {
+        const input = event.target;
+        const files = Array.from(input.files);
+        const previewContainer = document.getElementById('previewContainer');
+        const previews = document.getElementById('imagePreviews');
+        previews.innerHTML = '';
+        previewContainer.style.display = files.length > 0 ? 'block' : 'none';
+    
+        const dt = new DataTransfer();
+    
+        files.forEach(file => {
+          if (!file.type.match('image.*')) return;
+    
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'position-relative d-inline-block me-2 mb-2';
+    
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'img-thumbnail';
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+    
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+            deleteBtn.textContent = '×';
+            deleteBtn.style.zIndex = '10';
+    
+            deleteBtn.onclick = function () {
+              const newFiles = Array.from(input.files).filter(f => f !== file);
+              const newDt = new DataTransfer();
+              newFiles.forEach(f => newDt.items.add(f));
+              input.files = newDt.files;
+    
+              previewDiv.remove();
+              if (newDt.files.length === 0) {
+                previewContainer.style.display = 'none';
+              }
+            };
+    
+            dt.items.add(file);
+            previewDiv.appendChild(img);
+            previewDiv.appendChild(deleteBtn);
+            previews.appendChild(previewDiv);
+          };
+          reader.readAsDataURL(file);
+        });
+    
+        input.files = dt.files;
+      });
+    
+      // Adjuntar las imágenes para eliminar al enviar formulario
+      form.addEventListener('submit', function(e) {
+        // Antes de enviar, agregar campo oculto con los IDs de imágenes a eliminar
+        let inputEliminar = form.querySelector('input[name="imagenesParaEliminar"]');
+        if (!inputEliminar) {
+          inputEliminar = document.createElement('input');
+          inputEliminar.type = 'hidden';
+          inputEliminar.name = 'imagenesParaEliminar';
+          form.appendChild(inputEliminar);
         }
-      };
-
-      dt.items.add(file);
-      previewDiv.appendChild(img);
-      previewDiv.appendChild(deleteBtn);
-      previews.appendChild(previewDiv);
-    };
-
-    reader.readAsDataURL(file);
-  });
-
-  input.files = dt.files;
-});
-//----------------------------------------------------------------
-function previewHandler(e) {
-  const previewContainer = document.getElementById('previewContainer');
-  const previews = document.getElementById('imagePreviews');
-  previews.innerHTML = '';
-
-  if (this.files.length > 0) {
-    previewContainer.style.display = 'block';
-
-    Array.from(this.files).forEach(file => {
-      if (!file.type.match('image.*')) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        // aquí va el código que definimos arriba
-      };
-      reader.readAsDataURL(file);
-    });
-  } else {
-    previewContainer.style.display = 'none';
-  }
-}
-
-const deleteBtn = document.createElement('button');
-deleteBtn.type = 'button';
-deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
-deleteBtn.textContent = '×';
-
-
-      //--------------------------------------------------------------
-
+        inputEliminar.value = JSON.stringify(imagenesParaEliminar);
+    
+        // Si NO hay imágenes actuales ni nuevas, preguntar confirmación
+        if (imagenesActualesContainer.children.length === 0 && inputImagenes.files.length === 0) {
+          const confirmar = confirm("No has subido nuevas imágenes ni dejado imágenes actuales. ¿Deseas continuar?");
+          if (!confirmar) {
+            e.preventDefault(); // Cancelar envío
+          }
+        }
+      });
+    
       // Búsqueda en tiempo real
       document.getElementById('searchInput').addEventListener('input', function() {
         const filter = this.value.toLowerCase();
         const rows = document.querySelectorAll('tbody tr');
-        
+    
         rows.forEach(row => {
           const text = row.textContent.toLowerCase();
           row.style.display = text.includes(filter) ? '' : 'none';
         });
       });
     });
-  </script>
+    </script>
+    
+    
 </body>
 </html>

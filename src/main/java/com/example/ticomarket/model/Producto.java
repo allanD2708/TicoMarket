@@ -35,13 +35,11 @@ public class Producto {
     @Column(name = "categoria", nullable = false)
     private String categoria;
 
-    @Column(name = "imagen", nullable = false)
-    private String imagen;
 
     
     @ManyToOne
     @JoinColumn(name =  "id_usuario")
-    @JsonBackReference
+    // @JsonBackReference
     private Usuario usuario;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)

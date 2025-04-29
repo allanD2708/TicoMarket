@@ -47,37 +47,35 @@
                 </select>
               </div>
             </div>
+    <!-- ------------------------------------------------------------- -->
+    <div class="row">
+      <div class="col-md-4" th:each="producto : ${productos}">
+        <div class="card mb-4 product-wap rounded-0">
+          <div class="card rounded-0">
+            <img th:src="@{${#lists.isEmpty(producto.imagenes) ? '/img/no-image.jpg' : producto.imagenes[0].url}}" 
+                 class="card-img rounded-0 img-fluid" 
+                 alt="Imagen de producto">
     
-            <div class="row">
-              <div class="col-md-4" th:each="producto : ${productos}">
-                <div class="card mb-4 product-wap rounded-0">
-                  <div class="card rounded-0">
-                    <img th:src="@{${producto.imagen}}" class="card-img rounded-0 img-fluid" alt="Imagen de producto">
-
-                    <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
-                      <ul class="list-unstyled">
-                        <!-- <li><a class="btn btn-success text-white" th:href="@{'/producto/' + ${producto.id_producto}}"><i class="far fa-heart"></i></a></li> -->
-                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" th:href="@{'/producto/' + ${producto.id_producto}}"><i class="far fa-eye"></i></a></li> -->
-                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" th:href="producDetalle"><i class="far fa-eye"></i></a></li> -->
-                        <!-- <li><a class="btn custom-overlay-btn text-white mt-2" href="producDetalle"><i class="far fa-eye"></i></a></li> -->
-                        <li>
-                          <a class="btn custom-overlay-btn text-white mt-2" 
-                             th:href="@{'/producDetalle/' + ${producto.id_producto}}">
-                            <i class="far fa-eye"></i>
-                          </a>
-                        </li>                        
-                      
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <a class="h3 text-decoration-none" th:href="@{'/producto/' + ${producto.id_producto}}" th:text="${producto.nombre}">Nombre del producto</a>
-                    <p class="text-center mb-0" th:text="'₡' + ${producto.precio}">₡25000</p>
-                  </div>
-                </div>
-              </div>
+            <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+              <ul class="list-unstyled">
+                <li>
+                  <a class="btn custom-overlay-btn text-white mt-2" 
+                     th:href="@{'/producDetalle/' + ${producto.id_producto}}">
+                    <i class="far fa-eye"></i>
+                  </a>
+                </li>                        
+              </ul>
             </div>
+          </div>
+          <div class="card-body">
+            <a class="h3 text-decoration-none" th:href="@{'/producto/' + ${producto.id_producto}}" th:text="${producto.nombre}">Nombre del producto</a>
+            <p class="text-center mb-0" th:text="'₡' + ${producto.precio}">₡25000</p>
+          </div>
+        </div>
+      </div>
+    </div>
     
+    <!-- ------------------------------------------------------------------- -->
             <!-- Paginación -->
             <div class="row">
               <ul class="pagination pagination-lg justify-content-end">
