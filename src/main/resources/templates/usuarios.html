@@ -18,55 +18,6 @@
             <i class="fas fa-user-plus me-2"></i>Agregar Usuario
         </button>
     </div>
-    <!-- ---------------------------------------------------------------------------- -->
-
-    
-    <!-- <div class="table-responsive shadow rounded-3 bg-white">
-        <table class="table table-hover table-striped mb-0">
-            <thead class="table-primary">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Rol</th>
-                    <th>Dirección</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="usuario : ${usuarios}">
-                    <td th:text="${usuario.id_usuario}">1</td>
-                    <td th:text="${usuario.nombre}">Nombre Usuario</td>
-                    <td th:text="${usuario.email}">correo@ejemplo.com</td>
-                    <td th:text="${usuario.telefono}">123456789</td>
-                    <td th:text="${usuario.rol}">Rol</td>
-                    <td th:text="${usuario.direccion}">Dirección</td>
-                      
-                    <td>
-                      <button type="button" class="btn btn-sm btn-outline-warning me-1 btn-editar"
-                      data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal"
-                      th:attr="data-id=${usuario.id_usuario}, 
-                               data-nombre=${usuario.nombre}, 
-                               data-email=${usuario.email}, 
-                               data-telefono=${usuario.telefono}, 
-                               data-password=${usuario.password}, 
-                               data-rol=${usuario.rol}, 
-                               data-direccion=${usuario.direccion}">
-                      <i class="fas fa-edit"></i>
-                  </button>
-                  
-                      <a class="btn btn-sm btn-outline-danger"
-                         th:href="@{/usuarios/eliminar/{id}(id=${usuario.id_usuario})}">
-                          <i class="fas fa-trash-alt"></i>
-                      </a>
-                  </td>
-                  
-
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
 
 <!-- --------------------------------------------------------------------------------------------- -->
 <div class="card shadow-sm">
@@ -105,6 +56,11 @@
             <td th:text="${usuario.rol}">Rol</td>
             <td th:text="${usuario.direccion}">Dirección</td>
             <td>
+              <a class="btn btn-sm btn-outline-info"
+              th:href="@{/productos}"
+              title="Ver detalles">
+               <i class="fas fa-eye"></i>
+                </a>  
               <button type="button" class="btn btn-sm btn-outline-warning me-1 btn-editar"
                 data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal"
                 th:attr="data-id=${usuario.id_usuario}, 
@@ -135,9 +91,6 @@
 
 
 <!-- --------------------------------------------------------------------------------------------- -->
-    <!-- <div class="mt-4">
-        <a class="btn btn-outline-secondary" th:href="@{/}"><i class="fas fa-arrow-left me-2"></i>Volver a Inicio</a>
-    </div> -->
 
 </div>
 

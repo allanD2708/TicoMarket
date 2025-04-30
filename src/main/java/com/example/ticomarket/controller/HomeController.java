@@ -44,7 +44,17 @@ public class HomeController {
     }
 
 
+    @GetMapping("/login")
+    public String mostrarLogin(Model model) {
+    model.addAttribute("productos", productoService.listarProductos());
+        return "login"; 
+    }
    
+    @GetMapping("/registro")
+    public String mostrarRegistro(Model model) {
+    model.addAttribute("productos", productoService.listarProductos());
+        return "registro"; 
+    }
    
     @GetMapping("/productos/categoria/{categoria}")
     public String productosPorCategoria(@PathVariable String categoria, Model model) {

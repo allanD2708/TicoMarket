@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="fragments/header :: head">
+    <title>Registro - TicoMarket</title>
+</head>
+<body>
+
+  <!-- Header -->
+  <div th:replace="fragments/header :: body"></div>
+
+  <!-- Contenido principal -->
+  <main class="bg-light py-5">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card shadow">
+            <div class="card-body p-5">
+              <h2 class="card-title text-center text-primary mb-4">Registro de Vendedor</h2>
+  
+              <!-- Mensaje de éxito -->
+              <div th:if="${param.success}" class="alert alert-success" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                ¡Registro exitoso! Por favor inicia sesión.
+              </div>
+  
+              <!-- Formulario funcional sin Thymeleaf backend -->
+              <form action="/registro" method="post">
+                <input type="hidden" name="rol" value="VE">
+  
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      <input type="text" class="form-control" id="nombre" name="nombre"
+                        placeholder="Nombre" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      <input type="text" class="form-control" id="apellidos" name="apellidos"
+                        placeholder="Apellidos" required>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="email" class="form-label">Correo electrónico</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" name="email"
+                      placeholder="correo@ejemplo.com" required>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="telefono" class="form-label">Teléfono</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                      placeholder="8888-8888" required>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="direccion" class="form-label">Dirección</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                    <input type="text" class="form-control" id="direccion" name="direccion"
+                      placeholder="Dirección completa" required>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="password"
+                      placeholder="Mínimo 8 caracteres" required>
+                  </div>
+                </div>
+  
+                <div class="mb-4">
+                  <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="confirmPassword"
+                      name="confirmPassword" placeholder="Repita su contraseña" required>
+                  </div>
+                </div>
+  
+                <div class="d-grid mb-3">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-user-plus me-2"></i>Registrarse como Vendedor
+                  </button>
+                </div>
+              </form>
+            </div>
+  
+            <div class="card-footer text-center py-3 bg-light">
+              <p class="mb-0">¿Ya tienes una cuenta?
+                <a th:href="@{/login}" class="text-primary fw-bold">Inicia sesión aquí</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Contenido principal -->
+ 
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
