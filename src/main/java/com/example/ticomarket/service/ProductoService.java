@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ticomarket.model.Imagen;
 import com.example.ticomarket.model.Producto;
+import com.example.ticomarket.model.Usuario;
 import com.example.ticomarket.repository.ImagenRepository;
 import com.example.ticomarket.repository.ProductoRepository;
 
@@ -85,5 +86,7 @@ public Optional<Producto> buscarProductoConUsuarioPorId(Integer id) {
 
 // ---------------------------------------------------------------------------------------
     
-
+public List<Producto> listarPorUsuario(Usuario usuario) {
+    return productoRepository.findByUsuario(usuario);
+}
 }

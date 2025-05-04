@@ -1,4 +1,8 @@
 <!-- templates/fragments/header.html -->
+<div xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="body">
+
 <head th:fragment="head">
     <meta charset="utf-8">
     <title th:text="${title} ?: 'TicoMarket'">TicoMarket</title>
@@ -26,10 +30,14 @@
                     <a class="navbar-sm-brand text-light" href="tel:88000370">8800 0370</a>
                 </div>
                 <div>
-                    <a class="text-light" href="https://www.facebook.com/cr7cristianoronaldo" target="_blank"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.instagram.com/cr7selfie_official/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://x.com/Cristiano" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
-                    <a class="text-light" href="https://www.linkedin.com/feed/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
+                    <a class="text-light" href="https://www.facebook.com/cr7cristianoronaldo" target="_blank"><i
+                            class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://www.instagram.com/cr7selfie_official/" target="_blank"><i
+                            class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://x.com/Cristiano" target="_blank"><i
+                            class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://www.linkedin.com/feed/" target="_blank"><i
+                            class="fab fa-linkedin fa-sm fa-fw"></i></a>
                 </div>
             </div>
         </div>
@@ -49,10 +57,47 @@
                     <li class="nav-item"><a class="nav-link" href="/shop">Productos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/nosotros">Nosotros</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contacto">Contacto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/productos}">Subir Producto</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/usuarios}">Administrar Usuarios</a></li>
+
+                    <!-- Solo si es ROL VE -->
+                    <li class="nav-item" sec:authorize="hasRole('VE')">
+                        <a class="nav-link" th:href="@{/productos}">Subir Producto</a>
+                    </li>
+
+                    <!-- Solo si es ROL AD -->
+                    <li class="nav-item" sec:authorize="hasRole('AD')">
+                        <a class="nav-link " href="/usuarios">Administrar Usuarios</a>
+                    </li> 
+
                 </ul>
+                
+                <!-- User dropdown en el navbar principal -->
+              <!-- User dropdown en el navbar principal -->
+<ul class="navbar-nav">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle me-1"></i>
+            <span sec:authorize="isAuthenticated()" th:text="${#authentication.principal.usuario.nombre}" class="d-none d-lg-inline">Usuario</span>
+            <span sec:authorize="!isAuthenticated()" class="d-none d-lg-inline">Usuario</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+            <li sec:authorize="!isAuthenticated()">
+                <a class="dropdown-item" href="/login">Iniciar sesión</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a class="dropdown-item" href="/productos">Mi perfil</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" class="dropdown-item">
+                    <button type="submit" class="btn btn-link p-0 text-decoration-none">Cerrar sesión</button>
+                </form>
+            </li>
+        </ul>
+    </li>
+</ul>
+<!-- User dropdown en el navbar principal -->
+
+
+
             </div>
         </div>
     </nav>

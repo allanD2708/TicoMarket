@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
 <head th:replace="fragments/header :: head">
     <title>Registro - TicoMarket</title>
 </head>
@@ -11,6 +13,14 @@
   <!-- Contenido principal -->
   <main class="bg-light py-5">
     <div class="container py-5">
+      <!-- ------------------------------------- -->
+           <!-- Mensajes globales (arriba de todo) -->
+           <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <!-- ------------------------------------- -->
       <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
           <div class="card shadow">
@@ -22,64 +32,65 @@
                 <i class="fas fa-check-circle me-2"></i>
                 ¡Registro exitoso! Por favor inicia sesión.
               </div>
-  
-              <!-- Formulario funcional sin Thymeleaf backend -->
-              <form action="/registro" method="post">
+              
+              <!-- Formulario con Thymeleaf -->
+              <form th:action="@{/registro}" th:object="${usuario}" method="post">
                 <input type="hidden" name="rol" value="VE">
-  
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label for="nombre" class="form-label">Nombre</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-user"></i></span>
-                      <input type="text" class="form-control" id="nombre" name="nombre"
-                        placeholder="Nombre" required>
-                    </div>
+                
+                <!-- Mensajes de error GLOBALES (dentro del formulario) -->
+                <div th:if="${#fields.hasErrors('global')}" class="alert alert-danger" role="alert">
+                  <i class="fas fa-exclamation-circle me-2"></i>
+                  <span th:text="${#fields.errors('global')}"></span>
+                </div>
+
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre completo</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="nombre" 
+                           th:field="*{nombre}" placeholder="Nombre completo" required>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="apellidos" class="form-label">Apellidos</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-user"></i></span>
-                      <input type="text" class="form-control" id="apellidos" name="apellidos"
-                        placeholder="Apellidos" required>
-                    </div>
-                  </div>
+                  <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger small mt-1"></div>
                 </div>
   
                 <div class="mb-3">
                   <label for="email" class="form-label">Correo electrónico</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                    <input type="email" class="form-control" id="email" name="email"
-                      placeholder="correo@ejemplo.com" required>
+                    <input type="email" class="form-control" id="email" 
+                           th:field="*{email}" placeholder="correo@ejemplo.com" required>
                   </div>
+                  <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small mt-1"></div>
                 </div>
   
                 <div class="mb-3">
                   <label for="telefono" class="form-label">Teléfono</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                    <input type="tel" class="form-control" id="telefono" name="telefono"
-                      placeholder="8888-8888" required>
+                    <input type="tel" class="form-control" id="telefono" 
+                           th:field="*{telefono}" placeholder="8888-8888" required>
                   </div>
+                  <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="text-danger small mt-1"></div>
                 </div>
   
                 <div class="mb-3">
                   <label for="direccion" class="form-label">Dirección</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    <input type="text" class="form-control" id="direccion" name="direccion"
-                      placeholder="Dirección completa" required>
+                    <input type="text" class="form-control" id="direccion" 
+                           th:field="*{direccion}" placeholder="Dirección completa" required>
                   </div>
+                  <div th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="text-danger small mt-1"></div>
                 </div>
   
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                   <label for="password" class="form-label">Contraseña</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    <input type="password" class="form-control" id="password" name="password"
-                      placeholder="Mínimo 8 caracteres" required>
+                    <input type="password" class="form-control" id="password" 
+                           th:field="*{password}" placeholder="Mínimo 8 caracteres" required>
                   </div>
+                  <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small mt-1"></div>
                 </div>
   
                 <div class="mb-4">
@@ -87,9 +98,43 @@
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
                     <input type="password" class="form-control" id="confirmPassword"
-                      name="confirmPassword" placeholder="Repita su contraseña" required>
+                           name="confirmPassword" placeholder="Repita su contraseña" required>
                   </div>
-                </div>
+                </div> -->
+
+                <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                      <input type="password" class="form-control" id="password" 
+                             th:field="*{password}" placeholder="Mínimo 8 caracteres" required>
+                      <button class="btn btn-outline-primary" type="button" id="togglePassword"
+                              style="border-color: #4D7BEF; color: #4D7BEF;">
+                          <i class="fas fa-eye"></i>
+                      </button>
+                  </div>
+              </div>
+              
+              <div class="mb-4">
+                  <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+                  <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                      <input type="password" class="form-control" id="confirmPassword"
+                             name="confirmPassword" placeholder="Repita su contraseña" required>
+                      <button class="btn btn-outline-primary" type="button" id="toggleConfirmPassword"
+                              style="border-color: #4D7BEF; color: #4D7BEF;">
+                          <i class="fas fa-eye"></i>
+                      </button>
+                  </div>
+              </div>
+
+                 <!-- Mensaje específico para confirmación de contraseña -->
+    <div th:if="${#fields.hasErrors('global') && #fields.errors('global').contains('coinciden')}" 
+    class="text-danger small mt-1">
+   <i class="fas fa-exclamation-circle me-1"></i>
+   Las contraseñas no coinciden
+</div>
+<!-- ---------------------------------------------------------------------------------- -->
   
                 <div class="d-grid mb-3">
                   <button type="submit" class="btn btn-primary btn-lg">
@@ -110,11 +155,87 @@
     </div>
   </main>
   
-  <!-- Contenido principal -->
- 
-
   <!-- Footer -->
   <div th:replace="fragments/footer :: footer"></div>
 
+  <!-- Script para validar contraseñas coincidan -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const passwordError = document.createElement('div');
+    passwordError.className = 'text-danger small mt-1 d-none';
+    passwordError.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Las contraseñas no coinciden';
+    confirmPassword.parentNode.parentNode.appendChild(passwordError);
+    
+    form.addEventListener('submit', function(e) {
+        if (password.value !== confirmPassword.value) {
+            e.preventDefault();
+            passwordError.classList.remove('d-none');
+            confirmPassword.focus();
+        } else {
+            passwordError.classList.add('d-none');
+        }
+    });
+});
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+    const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
+    const confirmPassword = document.querySelector('#confirmPassword');
+    
+    // Función para cambiar el color del botón
+    function updateButtonStyle(button, isVisible) {
+        if(isVisible) {
+            button.style.backgroundColor = '#028FED';
+            button.style.color = 'white';
+            button.style.borderColor = '#028FED';
+        } else {
+            button.style.backgroundColor = 'transparent';
+            button.style.color = '#4D7BEF';
+            button.style.borderColor = '#4D7BEF';
+        }
+    }
+    
+    // Para contraseña principal
+    togglePassword.addEventListener('click', function() {
+        const isVisible = password.getAttribute('type') !== 'password';
+        password.setAttribute('type', isVisible ? 'password' : 'text');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+        updateButtonStyle(this, !isVisible);
+    });
+    
+    // Para confirmación de contraseña
+    toggleConfirmPassword.addEventListener('click', function() {
+        const isVisible = confirmPassword.getAttribute('type') !== 'password';
+        confirmPassword.setAttribute('type', isVisible ? 'password' : 'text');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+        updateButtonStyle(this, !isVisible);
+    });
+    
+    // Efectos hover
+    [togglePassword, toggleConfirmPassword].forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            if(this.style.backgroundColor !== 'rgb(2, 143, 237)') { // #028FED
+                this.style.backgroundColor = '#02D9ED20'; // Con transparencia
+                this.style.borderColor = '#02D9ED';
+            }
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            if(password.getAttribute('type') === 'password' && 
+               confirmPassword.getAttribute('type') === 'password') {
+                this.style.backgroundColor = 'transparent';
+                this.style.borderColor = '#4D7BEF';
+            }
+        });
+    });
+});
+  </script>
 </body>
 </html>

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
+import java.security.Principal;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -38,24 +39,63 @@ public class ProductoController {
     private UsuarioService usuarioService;
 
     
-    @GetMapping
-    public String listarProductos(Model model) {
-        List<Producto> productos = productoService.listarProductos();
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
+    
+//   ------------------------------------------------------------
+@GetMapping
+public String listarProductos(Model model, Principal principal) {
+    String email = principal.getName();
+    Optional<Usuario> usuarioOpt = usuarioService.findByEmail(email);
 
-        // Crear producto vacío para el formulario del modal
-        Producto producto = new Producto();
-        producto.setUsuario(new Usuario()); // Esto evita el error de null
-
-        model.addAttribute("productos", productos);
-        model.addAttribute("usuarios", usuarios);
-        model.addAttribute("producto", producto);
-
-        return "productos";
+    if (usuarioOpt.isEmpty()) {
+        return "redirect:/error";
     }
 
-  
+    Usuario usuario = usuarioOpt.get();
+    List<Producto> productos;
 
+    // Validar rol del usuario
+    if ("AD".equals(usuario.getRol())) {
+        productos = productoService.listarProductos(); // Todos los productos
+        model.addAttribute("usuarios", usuarioService.listarUsuarios()); // Lista completa de usuarios
+    } else if ("VE".equals(usuario.getRol())) {
+        productos = productoService.listarPorUsuario(usuario); // Solo los suyos
+        model.addAttribute("usuarios", List.of(usuario)); // Solo él mismo para el modal
+    } else {
+        return "redirect:/error"; // Rol no válido
+    }
+
+    Producto producto = new Producto();
+    producto.setUsuario(usuario); // Producto nuevo ya vinculado al usuario actual
+
+    model.addAttribute("productos", productos);
+    model.addAttribute("producto", producto);
+
+    return "productos";
+}
+//   ------------------------------------------------------------
+    // @GetMapping
+    // public String listarProductos(Model model, Principal principal) {
+    //     String email = principal.getName(); // Spring Security devuelve el email si usas email como username
+    //     Optional<Usuario> usuarioOpt = usuarioService.findByEmail(email);
+    
+    //     if (usuarioOpt.isEmpty()) {
+    //         // Manejo de error si no se encuentra el usuario (esto es raro pero posible)
+    //         return "redirect:/error";
+    //     }
+    
+    //     Usuario usuario = usuarioOpt.get();
+    
+    //     List<Producto> productos = productoService.listarPorUsuario(usuario);
+    
+    //     Producto producto = new Producto();
+    //     producto.setUsuario(usuario);
+    
+    //     model.addAttribute("productos", productos);
+    //     model.addAttribute("usuarios", List.of(usuario)); // Solo el vendedor actual
+    //     model.addAttribute("producto", producto);
+    
+    //     return "productos";
+    // }
 
 // //--------------------------------------------------------------------------
 
@@ -120,55 +160,6 @@ public String guardarProducto(@ModelAttribute Producto producto,
     return "redirect:/productos";
 }
 
-
-// @PostMapping("/guardar")
-// public String guardarProducto(@ModelAttribute Producto producto,
-//                                @RequestParam("files") MultipartFile[] files,
-//                                @RequestParam(value = "imagenesParaEliminar", required = false) String imagenesParaEliminarJson) {
-
-//     List<Imagen> nuevasImagenes = new ArrayList<>();
-
-//     // Si hay imágenes a eliminar
-//     if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
-//         List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
-//         productoService.eliminarImagenes(idsImagenesEliminar);
-//     }
-
-//     // Subir nuevas imágenes
-//     if (files != null && files.length > 0) {
-//         for (MultipartFile file : files) {
-//             if (!file.isEmpty()) {
-//                 try {
-//                     String nombreArchivo = UUID.randomUUID() + "_" + file.getOriginalFilename();
-//                     Path rutaImagenes = Paths.get("src/main/resources/static/imagenes");
-//                     Files.createDirectories(rutaImagenes);
-//                     Path rutaCompleta = rutaImagenes.resolve(nombreArchivo);
-//                     Files.copy(file.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
-
-//                     String url = "/imagenes/" + nombreArchivo;
-
-//                     Imagen imagen = new Imagen();
-//                     imagen.setUrl(url);
-//                     imagen.setProducto(producto);
-//                     nuevasImagenes.add(imagen);
-
-//                 } catch (IOException e) {
-//                     e.printStackTrace();
-//                 }
-//             }
-//         }
-//     }
-
-//     // Si agregaron nuevas imágenes, las añadimos
-//     if (!nuevasImagenes.isEmpty()) {
-//         producto.getImagenes().addAll(nuevasImagenes);
-//     }
-
-//     productoService.guardarProducto(producto); // Guarda en cascada
-
-//     return "redirect:/productos";
-// }
-//-------------------------------------------------------------
 
 
 

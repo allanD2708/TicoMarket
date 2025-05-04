@@ -34,4 +34,15 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
     
+    public boolean existeUsuarioConEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
+
+    // -------------------------------------------------------------
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+    
+    // -------------------------------------------------------------
+
 }

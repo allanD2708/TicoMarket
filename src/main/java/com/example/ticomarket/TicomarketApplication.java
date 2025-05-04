@@ -10,4 +10,6 @@ public class TicomarketApplication {
 		SpringApplication.run(TicomarketApplication.class, args);
 	}
 
+	
+
 }
