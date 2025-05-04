@@ -4,6 +4,8 @@ import com.example.ticomarket.service.UsuarioService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +50,8 @@ public class AuthController {
         return "registro";
     }
 // ---------------------------------------------------------------
+@Autowired
+private PasswordEncoder passwordEncoder;
 @PostMapping("/registro")
 public String registrarUsuario(
         @Valid @ModelAttribute("usuario") Usuario usuario,
@@ -72,6 +76,9 @@ public String registrarUsuario(
     // Asignar rol de vendedor (VE)
     usuario.setRol("VE");
     
+     // 🔐 Encriptar la contraseña antes de guardar
+     usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
     // Guardar el usuario
     usuarioService.guardarUsuario(usuario);
 

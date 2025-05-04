@@ -2,6 +2,7 @@ package com.example.ticomarket.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,9 @@ public class UsuarioController {
     
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+ 
 
     
     @GetMapping
@@ -45,6 +49,10 @@ public class UsuarioController {
         if (result.hasErrors()) {
             return "usuarios";
         }
+         // Encriptar si la contraseña no está en formato BCrypt
+    if (!usuario.getPassword().startsWith("$2a$") && !usuario.getPassword().startsWith("$2b$")) {
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+    }
         usuarioService.guardarUsuario(usuario);
         return "redirect:/usuarios";
     }
