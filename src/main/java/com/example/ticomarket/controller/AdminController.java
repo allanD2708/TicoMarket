@@ -17,4 +17,5 @@ public class AdminController {
         model.addAttribute("titulo", "Panel de Administración");
         return "usuarios";
     }
+    
 }

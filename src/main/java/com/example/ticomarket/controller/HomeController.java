@@ -4,13 +4,13 @@ package com.example.ticomarket.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
-
 import com.example.ticomarket.model.Producto;
 import com.example.ticomarket.service.ProductoService;
 
@@ -37,24 +37,34 @@ public class HomeController {
     }
     
 
-    @GetMapping("/shop")
-    public String mostrarShop(Model model) {
-    model.addAttribute("productos", productoService.listarProductos());
-        return "shop"; 
+    // @GetMapping("/shop")
+    // public String mostrarShop(Model model) {
+    // model.addAttribute("productos", productoService.listarProductos());
+    //     return "shop"; 
+    // }
+
+@GetMapping("/api/buscar")
+@ResponseBody
+public List<Producto> buscarProductos(@RequestParam("q") String query) {
+    return productoService.buscarPorNombre(query); // Método en el service
+}
+
+@GetMapping("/shop")
+public String mostrarShop(@RequestParam(name = "search", required = false) String search, Model model) {
+    List<Producto> productos;
+    if (search != null && !search.trim().isEmpty()) {
+        productos = productoService.buscarPorNombre(search); // Asume que este método existe
+    } else {
+        productos = productoService.listarProductos();
     }
+    model.addAttribute("productos", productos);
+    return "shop";
+}
 
 
-    // @GetMapping("/login")
-    // public String mostrarLogin(Model model) {
-    // model.addAttribute("productos", productoService.listarProductos());
-    //     return "login"; 
-    // }
-   
-    // @GetMapping("/registro")
-    // public String mostrarRegistro(Model model) {
-    // model.addAttribute("productos", productoService.listarProductos());
-    //     return "registro"; 
-    // }
+//------------------------------------------------------------------
+ 
+
    
     @GetMapping("/productos/categoria/{categoria}")
     public String productosPorCategoria(@PathVariable String categoria, Model model) {

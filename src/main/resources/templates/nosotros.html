@@ -7,6 +7,14 @@ lang="es"
 >
   <head th:replace="fragments/header :: head"></head>
   <body>
+    <style>
+      .services-icon-wap:hover {
+        background-color: var(--bs-primary) !important;
+        color: white;
+        transition: background-color 0.3s ease;
+      }
+    </style>
+    
 
     <!-- Incluye Header -->
     <div th:replace="fragments/header :: body"></div>
@@ -20,7 +28,9 @@ lang="es"
               <div class="col-md-8 text-white">
                 <h1>Sobre Nosotros</h1>
                 <p>
-                  Somos una tienda comprometida con la calidad y la satisfacción de nuestros clientes esten plenamente seguros al comprar y vender sus productos. Nuestra misión es brindar los mejores productos con un servicio excepcional.
+                  Bienvenidos a TicoMarket, el espacio donde la innovación y el comercio local se encuentran. 
+                  Somos una plataforma diseñada para conectar emprendedores costarricenses con consumidores que buscan productos y servicios únicos, 
+                  impulsando el crecimiento de pequeños negocios y fortaleciendo comunidades.
                 </p>
               </div>
               <div class="col-md-4">
@@ -31,7 +41,7 @@ lang="es"
         </section>
       
         <!-- Sección de Servicios -->
-        <section class="container py-5">
+        <!-- <section class="container py-5">
           <div class="row text-center pt-5 pb-3">
             <div class="col-lg-6 m-auto">
               <h1 class="h1 text-primary">Nuestros Servicios</h1>
@@ -68,7 +78,52 @@ lang="es"
               </div>
             </div>
           </div>
+        </section> -->
+
+
+        <section class="container py-5">
+          <div class="row text-center pt-5 pb-3">
+            <div class="col-lg-6 m-auto">
+              <h1 class="h1 text-primary">Nuestros Servicios</h1>
+              <p>Conectamos emprendedores locales con consumidores, ofreciendo una plataforma segura y accesible para impulsar el comercio nacional.</p>
+            </div>
+          </div>
+          <div class="row">
+        
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-store fa-lg"></i></div>
+                <h2 class="h5 mt-4">Apoyo a Emprendedores</h2>
+                <p>Facilitamos herramientas para que pequeños negocios crezcan y lleguen a más clientes.</p>
+              </div>
+            </div>
+        
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fas fa-lock"></i></div>
+                <h2 class="h5 mt-4">Pagos Seguros</h2>
+                <p>Garantizamos transacciones protegidas para que compres con confianza.</p>
+              </div>
+            </div>
+        
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-handshake"></i></div>
+                <h2 class="h5 mt-4">Conexión Directa</h2>
+                <p>Los compradores pueden comunicarse fácilmente con los vendedores para resolver dudas.</p>
+              </div>
+            </div>
+        
+            <div class="col-md-6 col-lg-3 pb-5">
+              <div class="h-100 py-5 services-icon-wap shadow text-center border rounded">
+                <div class="h1" style="color: var(--color-1);"><i class="fa fa-globe"></i></div>
+                <h2 class="h5 mt-4">Expansión al Mercado Internacional</h2>
+                <p>Apoyamos negocios locales con herramientas para su crecimiento global.</p>
+              </div>
+            </div>
+          </div>
         </section>
+        
       
         <!-- Sección Marcas -->
         <section class="py-5" style="background-color: var(--color-1);">

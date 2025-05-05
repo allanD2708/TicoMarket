@@ -99,28 +99,91 @@ public String listarProductos(Model model, Principal principal) {
 
 // //--------------------------------------------------------------------------
 
+// @PostMapping("/guardar")
+// public String guardarProducto(@ModelAttribute Producto producto,
+//                                @RequestParam("files") MultipartFile[] files,
+//                                @RequestParam(value = "imagenesParaEliminar", required = false) String imagenesParaEliminarJson) {
+
+//     List<Imagen> nuevasImagenes = new ArrayList<>();
+
+//     // Cargar el producto existente desde la BD si es edición
+//     Producto productoExistente = productoService.buscarProductoPorId(producto.getId_producto()).orElse(null);
+
+//     List<Imagen> imagenesExistentes = new ArrayList<>();
+//     if (productoExistente != null) {
+//         imagenesExistentes.addAll(productoExistente.getImagenes());
+//     }
+
+//     // Eliminar imágenes si corresponde
+//     if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
+//         List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
+//         productoService.eliminarImagenes(idsImagenesEliminar);
+
+//         // Filtrar las imágenes existentes, quitando las eliminadas
+//         imagenesExistentes.removeIf(imagen -> idsImagenesEliminar.contains(imagen.getId_imagen()));
+//     }
+
+//     // Subir nuevas imágenes
+//     if (files != null && files.length > 0) {
+//         for (MultipartFile file : files) {
+//             if (!file.isEmpty()) {
+//                 try {
+//                     String nombreArchivo = UUID.randomUUID() + "_" + file.getOriginalFilename();
+//                     Path rutaImagenes = Paths.get("src/main/resources/static/imagenes");
+//                     Files.createDirectories(rutaImagenes);
+//                     Path rutaCompleta = rutaImagenes.resolve(nombreArchivo);
+//                     Files.copy(file.getInputStream(), rutaCompleta, StandardCopyOption.REPLACE_EXISTING);
+
+//                     String url = "/imagenes/" + nombreArchivo;
+
+//                     Imagen imagen = new Imagen();
+//                     imagen.setUrl(url);
+//                     imagen.setProducto(producto);
+//                     nuevasImagenes.add(imagen);
+
+//                 } catch (IOException e) {
+//                     e.printStackTrace();
+//                 }
+//             }
+//         }
+//     }
+
+//     // Unir las imágenes existentes que quedaron + las nuevas subidas
+//     List<Imagen> imagenesFinales = new ArrayList<>();
+//     imagenesFinales.addAll(imagenesExistentes);
+//     imagenesFinales.addAll(nuevasImagenes);
+
+//     producto.setImagenes(imagenesFinales);
+
+//     productoService.guardarProducto(producto);
+
+//     return "redirect:/productos";
+// }
+
 @PostMapping("/guardar")
 public String guardarProducto(@ModelAttribute Producto producto,
                                @RequestParam("files") MultipartFile[] files,
                                @RequestParam(value = "imagenesParaEliminar", required = false) String imagenesParaEliminarJson) {
 
     List<Imagen> nuevasImagenes = new ArrayList<>();
-
-    // Cargar el producto existente desde la BD si es edición
-    Producto productoExistente = productoService.buscarProductoPorId(producto.getId_producto()).orElse(null);
-
     List<Imagen> imagenesExistentes = new ArrayList<>();
-    if (productoExistente != null) {
-        imagenesExistentes.addAll(productoExistente.getImagenes());
-    }
 
-    // Eliminar imágenes si corresponde
-    if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
-        List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
-        productoService.eliminarImagenes(idsImagenesEliminar);
+    // Validar si es edición (tiene ID)
+    if (producto.getId_producto() != null) {
+        Producto productoExistente = productoService.buscarProductoPorId(producto.getId_producto()).orElse(null);
 
-        // Filtrar las imágenes existentes, quitando las eliminadas
-        imagenesExistentes.removeIf(imagen -> idsImagenesEliminar.contains(imagen.getId_imagen()));
+        if (productoExistente != null) {
+            imagenesExistentes.addAll(productoExistente.getImagenes());
+
+            // Eliminar imágenes si corresponde
+            if (imagenesParaEliminarJson != null && !imagenesParaEliminarJson.isEmpty()) {
+                List<Integer> idsImagenesEliminar = new Gson().fromJson(imagenesParaEliminarJson, new TypeToken<List<Integer>>() {}.getType());
+                productoService.eliminarImagenes(idsImagenesEliminar);
+
+                // Filtrar las imágenes existentes, quitando las eliminadas
+                imagenesExistentes.removeIf(imagen -> idsImagenesEliminar.contains(imagen.getId_imagen()));
+            }
+        }
     }
 
     // Subir nuevas imágenes

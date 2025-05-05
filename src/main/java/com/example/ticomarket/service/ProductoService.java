@@ -89,4 +89,10 @@ public Optional<Producto> buscarProductoConUsuarioPorId(Integer id) {
 public List<Producto> listarPorUsuario(Usuario usuario) {
     return productoRepository.findByUsuario(usuario);
 }
+// ------------------------------------------------------
+public List<Producto> buscarPorNombre(String nombre) {
+    return productoRepository.findByNombreContainingIgnoreCase(nombre);
+}
+
+
 }
